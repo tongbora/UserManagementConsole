@@ -1,8 +1,5 @@
 package Controll;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import model.User;
 import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.CellStyle;
@@ -17,6 +14,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@ToString
 
 public class UserRepository {
     private static final String TELEGRAM_API_URL = "https://api.telegram.org/bot7812970096:AAFplgy_gt9I8T6gsPQIey933mR1hPd59YM/sendMessage";
@@ -42,9 +40,9 @@ public class UserRepository {
     }
     public void sendTelegram(User user) {
       // User user = new User();
-        String message = "New User Created: " + user.getName();
+        String message = "User Name: " + user.getName()+ "   " + "User Email: " + user.getEmail()+ "   " + "User UUID: " + user.getUuid()+ "   " + "User ID: " + user.getId();
         try {
-            URL url = new URL(TELEGRAM_API_URL + "?chat_id=" + CHAT_ID + "&text=" + message);
+            URL url = new URL(TELEGRAM_API_URL + "?chat_id=" + CHAT_ID + "&text=" + message.toString().replace("[", "").replace("]", ""));
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setDoOutput(true);
@@ -84,7 +82,7 @@ public class UserRepository {
                 Scanner scanner = new Scanner(System.in);
                 System.out.println("Your new name: ");
                 String name = scanner.nextLine();
-                System.out.println("Your new email: ");
+                System.out.println("Your new email:");
                 String email = scanner.nextLine();
                 users.remove(user);
                 users.add(new User(user.getId(), user.getUuid(), name, email, user.isDeleted()));
@@ -101,7 +99,7 @@ public class UserRepository {
             table.setColumnWidth( i , 20 , 50 );
         }
         for (User user : users) {
-            if (!user.isDeleted()) {
+            if (!user.isDeleted()){
                 table.addCell(String.valueOf(user.getId()));
                 table.addCell(String.valueOf(user.getUuid()));
                 table.addCell(user.getName());
@@ -110,6 +108,5 @@ public class UserRepository {
             }
         }
         System.out.println(table.render());
-
     }
 }
